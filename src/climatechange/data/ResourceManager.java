@@ -10,11 +10,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Classe permettant de charger les données sur les anomalies de températures d'un fichier CSV
+ * et d'interagir avec celles-ci.
+ */
 public class ResourceManager {
 
     private HashMap<Integer, TemperatureMap> allMaps;
-    protected int sampleNumber = 0;
 
+    /**
+     * Constructeur de la classe.
+     * Initialise la HashMap des cartes de températures.
+     */
     public ResourceManager() {
         allMaps = new HashMap<>();
     }
@@ -72,15 +79,25 @@ public class ResourceManager {
             bufRead.close();
             file.close();
 
-            sampleNumber = allYears.size();
-            System.out.println(sampleNumber);
-
             System.out.println("[End of file " + path + "]");
         } catch (IOException e) {
             System.out.println("[Could not read file " + path + "]");
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Méthode d'accès à la carte des anomalies de température d'une année.
+     * @param year L'année demandée.
+     * @return La carte des anomalies de température de cette année.
+     */
+    public TemperatureMap getTemperatureMap(Integer year) {
+        return allMaps.get(year);
+    }
+
+    public int getSampleNumber() {
+        return allMaps.keySet().size();
     }
 
     /**
@@ -99,7 +116,29 @@ public class ResourceManager {
         return (allMaps.containsKey(1880) ? allMaps.get(1880).keySet() : Collections.emptySet());
     }
 
-    public TemperatureMap getMap(Integer year) {
-        return allMaps.get(year);
+    /**
+     * Renvoie la valeur minimale des anomalies de température contenues dans le fichier CSV.
+     * @return La valeur minimale des anomalies.
+     */
+    public float getMinAnomaly() {
+        float minAnomaly = allMaps.get(1880).getMinAnomaly();
+        for (TemperatureMap temperatureMap : allMaps.values()) {
+            if (temperatureMap.getMinAnomaly() < minAnomaly)
+                minAnomaly = temperatureMap.getMinAnomaly();
+        }
+        return minAnomaly;
+    }
+
+    /**
+     * Renvoie la valeur maximale des anomalies de température contenues dans le fichier CSV.
+     * @return La valeur maximale des anomalies.
+     */
+    public float getMaxAnomaly() {
+        float maxAnomaly = allMaps.get(1880).getMaxAnomaly();
+        for (TemperatureMap temperatureMap : allMaps.values()) {
+            if (temperatureMap.getMinAnomaly() < maxAnomaly)
+                maxAnomaly = temperatureMap.getMaxAnomaly();
+        }
+        return maxAnomaly;
     }
 }

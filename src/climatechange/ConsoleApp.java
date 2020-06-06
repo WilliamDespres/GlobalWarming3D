@@ -14,6 +14,6 @@ public class ConsoleApp {
             e.printStackTrace();
         }
 
-        System.out.println(rm.getMap(1880).getMinAnomaly());
+        System.out.println("");
     }
 }

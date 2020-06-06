@@ -31,23 +31,21 @@ public class SimpleTest {
 	@Test
 	public void YearNumberTest() {
 		//Vérifier que le nombre d'années est égal à 141
-		assertEquals(141, resourceManager.sampleNumber);
+		assertEquals(141, resourceManager.getSampleNumber());
 	}
 	
 	
 	@Test
 	public void MinTemperatureTest() {
 		//Vérifier que la température minimale dans le fichier est -6.2441664
-		
-
-	}	
+		assertEquals(-6.2441664, resourceManager.getMinAnomaly(), 0.0000001);
+	}
 	
 	@Test
 	public void MaxTemperatureTest() {
 		//Vérifier que la température maximale dans le fichier est 8.97125
-		
-
-	}	
+		assertEquals(8.97125, resourceManager.getMaxAnomaly(), 0.0000001);
+	}
 	
 	
 	@Test
