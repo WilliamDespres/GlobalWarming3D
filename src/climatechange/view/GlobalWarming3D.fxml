@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="climatechange.view.Controller">
+   <children>
+      <HBox alignment="CENTER" prefHeight="400.0" prefWidth="700.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <Pane fx:id="earthPane" prefHeight="380.0" prefWidth="380.0" />
+            <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
+               <children>
+                  <CheckBox mnemonicParsing="false" text="Show temperatures" />
+                  <VBox prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="10.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="50.0" />
+                              <Button mnemonicParsing="false">
+                                 <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/play.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button layoutX="60.0" layoutY="10.0" mnemonicParsing="false">
+                                 <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/stop.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Label text="Speed:" />
+                              <ChoiceBox prefHeight="25.0" prefWidth="61.0" />
+                           </children>
+                        </HBox>
+                        <Slider />
+                        <HBox prefHeight="24.0" prefWidth="295.0" spacing="10.0">
+                           <children>
+                              <Label text="Display:" />
+                              <RadioButton mnemonicParsing="false" text="Colors" />
+                              <RadioButton mnemonicParsing="false" text="Histograms" />
+                           </children>
+                        </HBox>
+                        <Pane prefHeight="306.0" prefWidth="295.0" style="-fx-background-color: WHITE;" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding></VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

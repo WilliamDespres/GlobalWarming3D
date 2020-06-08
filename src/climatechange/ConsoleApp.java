@@ -13,7 +13,5 @@ public class ConsoleApp {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        System.out.println("");
     }
 }
