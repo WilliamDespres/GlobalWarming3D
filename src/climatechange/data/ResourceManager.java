@@ -92,8 +92,8 @@ public class ResourceManager {
      * @param year L'année demandée.
      * @return La carte des anomalies de température de cette année.
      */
-    public TemperatureMap getTemperatureMap(Integer year) {
-        return allMaps.get(year);
+    public TemperatureMap getMap(Integer year) {
+        return allMaps.getOrDefault(year, null);
     }
 
     public int getSampleNumber() {
@@ -120,7 +120,7 @@ public class ResourceManager {
      * Renvoie la valeur minimale des anomalies de température contenues dans le fichier CSV.
      * @return La valeur minimale des anomalies.
      */
-    public float getMinAnomaly() {
+    public Float getMinAnomaly() {
         float minAnomaly = allMaps.get(1880).getMinAnomaly();
         for (TemperatureMap temperatureMap : allMaps.values()) {
             if (temperatureMap.getMinAnomaly() < minAnomaly)
@@ -133,12 +133,49 @@ public class ResourceManager {
      * Renvoie la valeur maximale des anomalies de température contenues dans le fichier CSV.
      * @return La valeur maximale des anomalies.
      */
-    public float getMaxAnomaly() {
+    public Float getMaxAnomaly() {
         float maxAnomaly = allMaps.get(1880).getMaxAnomaly();
         for (TemperatureMap temperatureMap : allMaps.values()) {
-            if (temperatureMap.getMinAnomaly() < maxAnomaly)
+            if (temperatureMap.getMaxAnomaly() > maxAnomaly)
                 maxAnomaly = temperatureMap.getMaxAnomaly();
         }
         return maxAnomaly;
+    }
+
+    /**
+     * Renvoie l'anomalie de température pour une zone et une années données.
+     * @param latitude La latitude de la zone recherchée.
+     * @param longitude La longitude de la zone recherchée.
+     * @param year L'année recherchée.
+     * @return L'anomalie de température de la zone et de l'année données.
+     */
+    public Float getAnomaly(Integer year, int latitude, int longitude) {
+        return allMaps.containsKey(year) ? allMaps.get(year).get(latitude, longitude) : null;
+    }
+
+    /**
+     * Renvoie un tableau contenant toutes les anomalies de températures pour une année,
+     * dans l'ordre de lecture du fichier CSV.
+     * @param year L'année dont les anomalies sont à renvoyer.
+     * @return Toutes les anomalies de températures pour cette année.
+     */
+    public Float[] getAnomalies(Integer year) {
+        return allMaps.containsKey(year) ? allMaps.get(year).values().toArray(new Float[0]) : null;
+    }
+
+    /**
+     * Renvoie un tableau contenant toutes les anomalies de températures pour une zone,
+     * dans l'ordre croissant des années.
+     * @param latitude La latitude de la zone recherchée.
+     * @param longitude La longitude de la zone recherchée.
+     * @return Toutes les anomalies de températures pour cette zone.
+     */
+    public Float[] getAnomalies(int latitude, int longitude) {
+        Float[] anomalies = new Float[getSampleNumber()];
+        int i = 0;
+        for (TemperatureMap temperatureMap : allMaps.values()) {
+            anomalies[i++] = temperatureMap.get(latitude, longitude);
+        }
+        return anomalies;
     }
 }

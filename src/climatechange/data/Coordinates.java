@@ -60,6 +60,6 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        return "lat = " + latitude + " ; lon = " + longitude;
+        return "(" + latitude + "°, " + longitude + "°)";
     }
 }
