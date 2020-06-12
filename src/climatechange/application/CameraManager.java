@@ -1,4 +1,4 @@
-package climatechange.view;
+package climatechange.application;
 
 import javafx.event.EventHandler;
 import javafx.scene.*;
@@ -11,6 +11,8 @@ public class CameraManager {
 
     private static final double CAMERA_MIN_DISTANCE = -1.5;
     private static final double CAMERA_INITIAL_DISTANCE = -5;
+    private static final double CAMERA_INITIAL_X_OFFSET = 0.2;
+    private static final double CAMERA_INITIAL_Y_OFFSET = 0.0;
     private static final double CAMERA_INITIAL_X_ANGLE = 0.0;
     private static final double CAMERA_INITIAL_Y_ANGLE = 160.0;
     private static final double CAMERA_NEAR_CLIP = 0.1;
@@ -48,6 +50,8 @@ public class CameraManager {
 
         camera.setNearClip(CAMERA_NEAR_CLIP);
         camera.setFarClip(CAMERA_FAR_CLIP);
+        camera.setTranslateX(CAMERA_INITIAL_X_OFFSET);
+        camera.setTranslateY(CAMERA_INITIAL_Y_OFFSET);
         camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
         ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
         rx.setAngle(CAMERA_INITIAL_X_ANGLE);
