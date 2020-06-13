@@ -43,15 +43,15 @@
                               <ChoiceBox fx:id="speedChoiceBox" prefHeight="25.0" prefWidth="61.0" />
                            </children>
                         </HBox>
-                        <Slider fx:id="yearSlider" />
+                        <Slider fx:id="yearSlider" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
                         <HBox prefHeight="24.0" prefWidth="295.0" spacing="10.0">
                            <children>
                               <Label text="Display:" />
-                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" text="Colors" />
+                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" selected="true" text="Colors" />
                               <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" text="Histograms" />
                            </children>
                         </HBox>
-                        <Pane fx:id="graphPane" prefHeight="306.0" prefWidth="295.0" style="-fx-background-color: WHITE;" VBox.vgrow="ALWAYS" />
+                        <Pane fx:id="graphCanvas" prefHeight="306.0" prefWidth="295.0" style="-fx-background-color: WHITE;" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </children>

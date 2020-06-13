@@ -1,14 +1,13 @@
 package climatechange.application.rendering;
 
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 public abstract class Quadrilaterals {
-    public static MeshView makeCenteredQuadrilateral(Group parent, float latitude, float longitude, Color color, float size) {
+    public static MeshView makeCenteredQuadrilateral(float latitude, float longitude, Color color, float size) {
         return makeQuadrilateral(Conversions.geoCoordTo3dCoord(latitude + size/2, longitude + size/2).multiply(1.01),
                                  Conversions.geoCoordTo3dCoord(latitude - size/2, longitude + size/2).multiply(1.01),
                                  Conversions.geoCoordTo3dCoord(latitude - size/2, longitude - size/2).multiply(1.01),

@@ -1,6 +1,5 @@
 package climatechange.application.rendering;
 
-import climatechange.application.GlobalWarming3D;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 
@@ -19,7 +18,7 @@ public abstract class Conversions {
                         * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
     }
 
-    public static Color getColorFromTemperature(float temperature, float minTemp, float maxTemp) {
+    public static Color temperatureToColor(float temperature, float minTemp, float maxTemp) {
         if (temperature > 0) return new Color(1, 1-temperature/ maxTemp, 0, 0.5);
         else                 return new Color(1-temperature/ minTemp, 1-temperature/ minTemp, 1, 0.5);
     }

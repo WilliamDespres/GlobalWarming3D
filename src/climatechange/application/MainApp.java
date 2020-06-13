@@ -12,6 +12,7 @@ public class MainApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("GlobalWarming3D.fxml"));
         stage.setTitle("Global Warming 3D");
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 
