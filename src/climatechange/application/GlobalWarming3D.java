@@ -92,8 +92,10 @@ public class GlobalWarming3D implements Initializable {
         // Initialisation des températures (activé par défaut)
         initQuadrilaterals();
         initKey();
-        enableQuadrilaterals();
+        //enableQuadrilaterals();
         enableKey();
+
+        initHistograms();
     }
 
     /**
@@ -172,10 +174,25 @@ public class GlobalWarming3D implements Initializable {
             float temperature = entry.getValue();
 
             if (temperature > 0)
+                histograms.add(Histograms.makeHistogram(latitude, longitude, temperature, maxTemp));
+        }
+
+        earth.getChildren().addAll(histograms);
+        //earth.getChildren().add(Histograms.makeHistogram(46, 2, Color.RED, 5));
+
+
+        /*TemperatureMap temperatureMap = resourceManager.getMap(2020);
+
+        for (Map.Entry<Coordinates, Float> entry : temperatureMap.entrySet()) {
+            int latitude = entry.getKey().getLatitude();
+            int longitude = entry.getKey().getLongitude();
+            float temperature = entry.getValue();
+
+            if (temperature > 0)
                 histograms.add(Histograms.makeHistogram(latitude, longitude, Conversions.temperatureToColor(temperature, minTemp, maxTemp), temperature));
             else
                 histograms.add(Quadrilaterals.makeCenteredQuadrilateral(latitude, longitude, Conversions.temperatureToColor(temperature, minTemp, maxTemp), 2));
-        }
+        }*/
     }
 
     /**
