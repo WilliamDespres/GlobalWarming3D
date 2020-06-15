@@ -8,15 +8,16 @@ import javafx.scene.transform.Translate;
 
 public abstract class Histograms {
     /**
-     * Crée un histogramme de taille proportionnelle à la température, centré sur la position géographique donnée.
+     * Crée un histogramme de taille et couleur proportionnelles à la température, centré sur une position géographique donnée.
      * @param latitude La latitude de la position géographique.
      * @param longitude La longitude de la position géographique.
-     * @param temperature La température de la position géographique
+     * @param temperature La température de la position géographique.
      * @param maxTemp L'anomalie de température la plus haute.
+     * @param minTemp L'anomalie de température la plus basse.
      * @return L'histogramme sous forme de cylindre.
      */
-    public static Cylinder makeHistogram(int latitude, int longitude, float temperature, float maxTemp) {
-        Cylinder cylinder = new Cylinder(0.01, 0.6 * temperature/maxTemp);
+    public static Cylinder makeHistogram(int latitude, int longitude, float temperature, float maxTemp, float minTemp) {
+        Cylinder cylinder = new Cylinder(0.01, temperature > 0 ? 0.6 * temperature/maxTemp : 0.01);
         Point3D position = Conversions.geoCoordTo3dCoord(latitude, longitude);
 
         //Place le cylindre au bon endroit
@@ -31,7 +32,7 @@ public abstract class Histograms {
         cylinder.getTransforms().addAll(translate, rotate);
 
         // Couleur du cylindre
-        cylinder.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, 0, maxTemp)));
+        cylinder.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, minTemp, maxTemp)));
 
         return cylinder;
     }

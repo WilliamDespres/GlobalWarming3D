@@ -15,24 +15,24 @@
             <Pane fx:id="earthCanvas" prefHeight="380.0" prefWidth="380.0" />
             <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                <children>
-                  <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempAction" selected="true" text="Show temperatures" />
+                  <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" selected="true" text="Show temperatures" />
                   <VBox fx:id="controlsVBox" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="10.0">
                            <children>
                               <TextField fx:id="yearTextField" prefHeight="25.0" prefWidth="50.0" />
-                              <Button mnemonicParsing="false">
+                              <Button fx:id="playPauseButton" mnemonicParsing="false" onAction="#handlePlayPauseButtonAction">
                                  <graphic>
-                                    <ImageView fx:id="playPauseButton" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="playPauseImage" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@icons/play.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button layoutX="60.0" layoutY="10.0" mnemonicParsing="false">
+                              <Button fx:id="stopButton" layoutX="60.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleStopButtonAction">
                                  <graphic>
-                                    <ImageView fx:id="stopButton" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@icons/stop.png" />
                                        </image>
@@ -40,15 +40,16 @@
                                  </graphic>
                               </Button>
                               <Label text="Speed:" />
-                              <ChoiceBox fx:id="speedChoiceBox" prefHeight="25.0" prefWidth="61.0" />
+                              <ChoiceBox fx:id="speedChoiceBox" prefHeight="25.0" prefWidth="46.0" />
+                              <Label text="years/sec" />
                            </children>
                         </HBox>
                         <Slider fx:id="yearSlider" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
                         <HBox prefHeight="24.0" prefWidth="295.0" spacing="10.0">
                            <children>
                               <Label text="Display:" />
-                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" selected="true" text="Colors" />
-                              <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" text="Histograms" />
+                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" onAction="#handleColorsRadioButtonAction" selected="true" text="Colors" />
+                              <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
                            </children>
                         </HBox>
                         <Pane fx:id="graphCanvas" prefHeight="306.0" prefWidth="295.0" style="-fx-background-color: WHITE;" VBox.vgrow="ALWAYS" />

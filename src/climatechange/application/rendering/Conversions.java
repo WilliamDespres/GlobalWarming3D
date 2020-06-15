@@ -19,7 +19,7 @@ public abstract class Conversions {
     }
 
     public static Color temperatureToColor(float temperature, float minTemp, float maxTemp) {
-        if (temperature > 0) return new Color(1, 1-temperature/ maxTemp, 0, 0.5);
-        else                 return new Color(1-temperature/ minTemp, 1-temperature/ minTemp, 1, 0.5);
+        if (temperature > 0) return new Color(1, 1 - temperature/maxTemp, 0, 0.5);
+        else                 return new Color(1 - temperature/minTemp, 1 - temperature/minTemp, 1, 0.5);
     }
 }

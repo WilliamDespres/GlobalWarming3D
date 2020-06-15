@@ -8,14 +8,18 @@ import climatechange.data.ResourceManager;
 import climatechange.data.TemperatureMap;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
 
@@ -32,15 +36,22 @@ public class GlobalWarming3D implements Initializable {
     @FXML private Slider yearSlider;
     @FXML private RadioButton colorsRadioButton;
     @FXML private RadioButton histogramsRadioButton;
+    @FXML private ChoiceBox<Integer> speedChoiceBox;
+    @FXML private Button playPauseButton;
+    @FXML private Button stopButton;
+    @FXML private ImageView playPauseImage;
 
     public ResourceManager resourceManager = new ResourceManager();
 
     Group earth;
     List<MeshView> quadrilaterals = new ArrayList<>();
-    List<Node> histograms = new ArrayList<>();
+    List<Cylinder> histograms = new ArrayList<>();
     List<Node> key = new ArrayList<>();
 
     private float minTemp, maxTemp;
+
+    boolean animated = false;
+    AnimationTimer animationTimer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -57,6 +68,9 @@ public class GlobalWarming3D implements Initializable {
         ToggleGroup radioButtonsGroup = new ToggleGroup();
         colorsRadioButton.setToggleGroup(radioButtonsGroup);
         histogramsRadioButton.setToggleGroup(radioButtonsGroup);
+
+        speedChoiceBox.getItems().addAll(1, 2, 4, 8, 16, 32);
+        speedChoiceBox.setValue(8);
 
         initListeners();
         initEarthCanvas();
@@ -86,16 +100,19 @@ public class GlobalWarming3D implements Initializable {
         //Create subscene
         SubScene subScene = new SubScene(earth, 380, 380, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-        subScene.setFill(Color.DARKGRAY/*Color.web("#8eff8a")*/);
+        subScene.setFill(Color.DARKGRAY);
         earthCanvas.getChildren().addAll(subScene);
 
         // Initialisation des températures (activé par défaut)
         initQuadrilaterals();
-        initKey();
-        //enableQuadrilaterals();
-        enableKey();
-
         initHistograms();
+        initKey();
+
+        if (showTempCheckBox.isSelected()) {
+            enableKey();
+            if (colorsRadioButton.isSelected()) enableQuadrilaterals();
+            else enableHistograms();
+        }
     }
 
     /**
@@ -120,10 +137,11 @@ public class GlobalWarming3D implements Initializable {
                         yearTextField.setText(Integer.toString(year));
                     }
 
-                    // Mise à jour de la carte
-                    updateQuadrilaterals(year);
                     // Mise à jour du slider
                     yearSlider.setValue(year);
+                    // Mise à jour de la carte
+                    updateQuadrilaterals(year);
+                    updateHistograms(year);
                 }
             }
             // Suppression des caractères non numériques
@@ -153,18 +171,8 @@ public class GlobalWarming3D implements Initializable {
     }
 
     /**
-     * Met à jour la liste de quadrilatères représentant les anomalies de température pour une année donnée.
-     * @param year L'année à afficher.
+     * Initialise la liste d'histogrammes représentant les anomalies de température pour l'année 2020.
      */
-    public void updateQuadrilaterals(int year) {
-        Float[] temperatures = resourceManager.getAnomalies(year);
-
-        for (int i = 0; i < temperatures.length; i++) {
-            quadrilaterals.get(i).setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperatures[i], minTemp, maxTemp)));
-        }
-    }
-
-    //TODO
     public void initHistograms() {
         TemperatureMap temperatureMap = resourceManager.getMap(2020);
 
@@ -173,26 +181,8 @@ public class GlobalWarming3D implements Initializable {
             int longitude = entry.getKey().getLongitude();
             float temperature = entry.getValue();
 
-            if (temperature > 0)
-                histograms.add(Histograms.makeHistogram(latitude, longitude, temperature, maxTemp));
+            histograms.add(Histograms.makeHistogram(latitude, longitude, temperature, maxTemp, minTemp));
         }
-
-        earth.getChildren().addAll(histograms);
-        //earth.getChildren().add(Histograms.makeHistogram(46, 2, Color.RED, 5));
-
-
-        /*TemperatureMap temperatureMap = resourceManager.getMap(2020);
-
-        for (Map.Entry<Coordinates, Float> entry : temperatureMap.entrySet()) {
-            int latitude = entry.getKey().getLatitude();
-            int longitude = entry.getKey().getLongitude();
-            float temperature = entry.getValue();
-
-            if (temperature > 0)
-                histograms.add(Histograms.makeHistogram(latitude, longitude, Conversions.temperatureToColor(temperature, minTemp, maxTemp), temperature));
-            else
-                histograms.add(Quadrilaterals.makeCenteredQuadrilateral(latitude, longitude, Conversions.temperatureToColor(temperature, minTemp, maxTemp), 2));
-        }*/
     }
 
     /**
@@ -220,6 +210,35 @@ public class GlobalWarming3D implements Initializable {
     }
 
     /**
+     * Met à jour la liste de quadrilatères représentant les anomalies de température pour une année donnée.
+     * @param year L'année à afficher.
+     */
+    public void updateQuadrilaterals(int year) {
+        Float[] temperatures = resourceManager.getAnomalies(year);
+
+        for (int i = 0; i < temperatures.length; i++) {
+            quadrilaterals.get(i).setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperatures[i], minTemp, maxTemp)));
+        }
+    }
+
+    /**
+     * Met à jour la liste d'histogrammes représentant les anomalies de température pour une année donnée.
+     * @param year L'année à afficher.
+     */
+    public void updateHistograms(int year) {
+        Float[] temperatures = resourceManager.getAnomalies(year);
+        Object[] areas = resourceManager.getAreas().toArray();
+
+        for (int i = 0; i < temperatures.length; i++) {
+            Cylinder histogram = histograms.get(i);
+            float temperature = temperatures[i];
+
+            histogram.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, minTemp, maxTemp)));
+            histogram.setHeight(temperature > 0 ? 0.6 * temperature/maxTemp : 0.01);
+        }
+    }
+
+    /**
      * Affiche les quadrilatères.
      */
     public void enableQuadrilaterals() {
@@ -231,6 +250,20 @@ public class GlobalWarming3D implements Initializable {
      */
     public void disableQuadrilaterals() {
         earth.getChildren().removeAll(quadrilaterals);
+    }
+
+    /**
+     * Affiche les histogrammes.
+     */
+    public void enableHistograms() {
+        earth.getChildren().addAll(histograms);
+    }
+
+    /**
+     * Arrête l'affichage des histogrammes.
+     */
+    public void disableHistograms() {
+        earth.getChildren().removeAll(histograms);
     }
 
     /**
@@ -251,19 +284,83 @@ public class GlobalWarming3D implements Initializable {
      * Active ou désactive l'affichage des températures.
      * Méthode appelée quand l'utilisateur clique sur la checkBox "Show temperatures".
      */
-    public void handleShowTempAction() {
+    public void handleShowTempCheckBoxAction() {
+        //Activation
         if (showTempCheckBox.isSelected()) {
             controlsVBox.setDisable(false);
-            enableQuadrilaterals();
             enableKey();
+            if (colorsRadioButton.isSelected()) enableQuadrilaterals();
+            else enableHistograms();
         }
+        //Désactivation
         else {
             controlsVBox.setDisable(true);
             disableQuadrilaterals();
+            disableHistograms();
             disableKey();
         }
     }
 
+    /**
+     * Passe l'affichage en mode quadrilatères.
+     */
+    public void handleColorsRadioButtonAction() {
+        disableHistograms();
+        enableQuadrilaterals();
+    }
 
+    /**
+     * Passe l'affichage en mode histogrammes.
+     */
+    public void handleHistogramsRadioButtonAction() {
+        disableQuadrilaterals();
+        enableHistograms();
+    }
+
+    /**
+     * Lance ou met en pause l'animation.
+     */
+    public void handlePlayPauseButtonAction() {
+        if (!animated) {
+            yearSlider.setValue(1880);
+            final long startNanoTime = System.nanoTime();
+            animationTimer = new AnimationTimer() {
+                @Override
+                public void handle(long currentNanoTime) {
+                    if ((currentNanoTime - startNanoTime) % (1000000000 / speedChoiceBox.getValue()) == 0) {//TODO marche pas
+                        yearSlider.increment();
+                    }
+                    if (yearSlider.getValue() == 2020)
+                        stopButton.fire();
+                }
+            };
+            animationTimer.start();
+            /*try {
+                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\pause.png").toURI().getPath()));
+            } catch (Exception ignored) {ignored.printStackTrace();}
+            */animated = true;
+        }
+        else {
+            animationTimer.stop();
+            /*try {
+                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\play.png").toURI().getPath()));
+            } catch (Exception ignored) {ignored.printStackTrace();}
+            */animated = false;
+        }
+    }
+
+    /**
+     * Arrête l'animation.
+     */
+    public void handleStopButtonAction() {
+        if (animated) {
+            /*try {
+                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\play.png").toURI().getPath()));
+            } catch (Exception ignored) {ignored.printStackTrace();}
+            */animationTimer.stop();
+            yearSlider.setValue(2020);
+            animated = false;
+        }
+    }
 
 }
