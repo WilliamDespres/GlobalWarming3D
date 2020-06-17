@@ -9,6 +9,8 @@ import climatechange.data.TemperatureMap;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
@@ -22,7 +24,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -39,7 +43,7 @@ public class GlobalWarming3D implements Initializable {
     @FXML private ChoiceBox<Integer> speedChoiceBox;
     @FXML private Button playPauseButton;
     @FXML private Button stopButton;
-    @FXML private ImageView playPauseImage;
+    @FXML private ImageView playPauseImageView;
 
     public ResourceManager resourceManager = new ResourceManager();
 
@@ -51,7 +55,7 @@ public class GlobalWarming3D implements Initializable {
     private float minTemp, maxTemp;
 
     boolean animated = false;
-    AnimationTimer animationTimer;
+    Timeline animation;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -69,7 +73,7 @@ public class GlobalWarming3D implements Initializable {
         colorsRadioButton.setToggleGroup(radioButtonsGroup);
         histogramsRadioButton.setToggleGroup(radioButtonsGroup);
 
-        speedChoiceBox.getItems().addAll(1, 2, 4, 8, 16, 32);
+        speedChoiceBox.getItems().addAll(1, 2, 4, 8, 16, 32, 64);
         speedChoiceBox.setValue(8);
 
         initListeners();
@@ -153,6 +157,23 @@ public class GlobalWarming3D implements Initializable {
             // Mise à jour du textField
             yearTextField.setText(Long.toString(Math.round((double)newValue)));
         }));
+
+        // Listener pour la choice box
+        speedChoiceBox.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (animated) {
+                animation.stop();
+                animation = new Timeline(new KeyFrame(Duration.millis((float) 1000/newValue), new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (yearSlider.getValue() < 2020) yearSlider.increment();
+                        else stopButton.fire();
+                    }
+                }));
+                animation.setCycleCount(Timeline.INDEFINITE);
+                animation.play();
+            }
+        }));
     }
 
     /**
@@ -227,7 +248,6 @@ public class GlobalWarming3D implements Initializable {
      */
     public void updateHistograms(int year) {
         Float[] temperatures = resourceManager.getAnomalies(year);
-        Object[] areas = resourceManager.getAreas().toArray();
 
         for (int i = 0; i < temperatures.length; i++) {
             Cylinder histogram = histograms.get(i);
@@ -323,29 +343,27 @@ public class GlobalWarming3D implements Initializable {
     public void handlePlayPauseButtonAction() {
         if (!animated) {
             yearSlider.setValue(1880);
-            final long startNanoTime = System.nanoTime();
-            animationTimer = new AnimationTimer() {
+            animation = new Timeline(new KeyFrame(Duration.millis((float) 1000/speedChoiceBox.getValue()), new EventHandler<ActionEvent>() {
+
                 @Override
-                public void handle(long currentNanoTime) {
-                    if ((currentNanoTime - startNanoTime) % (1000000000 / speedChoiceBox.getValue()) == 0) {//TODO marche pas
-                        yearSlider.increment();
-                    }
-                    if (yearSlider.getValue() == 2020)
-                        stopButton.fire();
+                public void handle(ActionEvent event) {
+                    if (yearSlider.getValue() < 2020) yearSlider.increment();
+                    else stopButton.fire();
                 }
-            };
-            animationTimer.start();
-            /*try {
-                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\pause.png").toURI().getPath()));
-            } catch (Exception ignored) {ignored.printStackTrace();}
-            */animated = true;
+            }));
+            animation.setCycleCount(Timeline.INDEFINITE);
+            animation.play();
+            try {
+                playPauseImageView.setImage(new Image("climatechange/application/icons/pause.png"));
+            } catch (Exception ignored) {}
+            animated = true;
         }
         else {
-            animationTimer.stop();
-            /*try {
-                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\play.png").toURI().getPath()));
-            } catch (Exception ignored) {ignored.printStackTrace();}
-            */animated = false;
+            animation.stop();
+            try {
+                playPauseImageView.setImage(new Image("climatechange/application/icons/play.png"));
+            } catch (Exception ignored) {}
+            animated = false;
         }
     }
 
@@ -354,10 +372,10 @@ public class GlobalWarming3D implements Initializable {
      */
     public void handleStopButtonAction() {
         if (animated) {
-            /*try {
-                playPauseImage.setImage(new Image(getClass().getResource("\\icons\\play.png").toURI().getPath()));
-            } catch (Exception ignored) {ignored.printStackTrace();}
-            */animationTimer.stop();
+            try {
+                playPauseImageView.setImage(new Image("climatechange/application/icons/play.png"));
+            } catch (Exception ignored) {}
+            animation.stop();
             yearSlider.setValue(2020);
             animated = false;
         }

@@ -23,7 +23,7 @@
                               <TextField fx:id="yearTextField" prefHeight="25.0" prefWidth="50.0" />
                               <Button fx:id="playPauseButton" mnemonicParsing="false" onAction="#handlePlayPauseButtonAction">
                                  <graphic>
-                                    <ImageView fx:id="playPauseImage" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="playPauseImageView" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@icons/play.png" />
                                        </image>
@@ -44,7 +44,7 @@
                               <Label text="years/sec" />
                            </children>
                         </HBox>
-                        <Slider fx:id="yearSlider" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
+                        <Slider fx:id="yearSlider" blockIncrement="1.0" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
                         <HBox prefHeight="24.0" prefWidth="295.0" spacing="10.0">
                            <children>
                               <Label text="Display:" />
