@@ -1,5 +1,6 @@
 package climatechange.application.rendering;
 
+import climatechange.data.Coordinates;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 
@@ -16,6 +17,12 @@ public abstract class Conversions {
                 -java.lang.Math.sin(java.lang.Math.toRadians(lat_cor)),
                 java.lang.Math.cos(java.lang.Math.toRadians(lon_cor))
                         * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
+    }
+
+    public static Coordinates coord3dTogeoCoord(Point3D position) {
+        int lat = 90 - (int)(TEXTURE_LAT_OFFSET + Math.toDegrees(Math.acos(-position.getY())));
+        int lon = -(int) (TEXTURE_LON_OFFSET + Math.toDegrees(Math.atan2(position.getX(), position.getZ())));//Math.toDegrees(Math.atan(position.getX() / position.getZ()));
+        return new Coordinates(lat, lon);
     }
 
     public static Color temperatureToColor(float temperature, float minTemp, float maxTemp) {

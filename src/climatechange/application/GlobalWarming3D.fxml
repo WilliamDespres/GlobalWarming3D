@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -15,7 +16,7 @@
             <Pane fx:id="earthCanvas" prefHeight="380.0" prefWidth="380.0" />
             <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                <children>
-                  <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" selected="true" text="Show temperatures" />
+                  <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" text="Show temperatures" />
                   <VBox fx:id="controlsVBox" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="10.0">
@@ -52,7 +53,14 @@
                               <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
                            </children>
                         </HBox>
-                        <Pane fx:id="graphCanvas" prefHeight="306.0" prefWidth="295.0" style="-fx-background-color: WHITE;" VBox.vgrow="ALWAYS" />
+                        <LineChart fx:id="lineChart" legendVisible="false" prefHeight="233.0" prefWidth="295.0" title="Temperature evolution" titleSide="BOTTOM">
+                          <xAxis>
+                            <NumberAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
                      </children>
                   </VBox>
                </children>

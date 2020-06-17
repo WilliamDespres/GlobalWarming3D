@@ -2,6 +2,7 @@ package climatechange.application.rendering;
 
 import javafx.geometry.Point3D;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -16,8 +17,8 @@ public abstract class Histograms {
      * @param minTemp L'anomalie de température la plus basse.
      * @return L'histogramme sous forme de cylindre.
      */
-    public static Cylinder makeHistogram(int latitude, int longitude, float temperature, float maxTemp, float minTemp) {
-        Cylinder cylinder = new Cylinder(0.01, temperature > 0 ? 0.6 * temperature/maxTemp : 0.01);
+    public static Box makeHistogram(int latitude, int longitude, float temperature, float maxTemp, float minTemp) {
+        Box box = new Box(0.01, 0.6, 0.01);//temperature > 0 ? 0.6 * temperature/maxTemp : 0.01, 0.01);
         Point3D position = Conversions.geoCoordTo3dCoord(latitude, longitude);
 
         //Place le cylindre au bon endroit
@@ -29,11 +30,11 @@ public abstract class Histograms {
         Rotate rotate = new Rotate(angle, axis);
 
         // Ajout des transformations
-        cylinder.getTransforms().addAll(translate, rotate);
+        box.getTransforms().addAll(translate, rotate);
 
         // Couleur du cylindre
-        cylinder.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, minTemp, maxTemp)));
+        box.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, minTemp, maxTemp)));
 
-        return cylinder;
+        return box;
     }
 }
