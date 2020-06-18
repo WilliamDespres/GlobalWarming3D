@@ -21,7 +21,24 @@ public abstract class Conversions {
 
     public static Coordinates coord3dTogeoCoord(Point3D position) {
         int lat = 90 - (int)(TEXTURE_LAT_OFFSET + Math.toDegrees(Math.acos(-position.getY())));
-        int lon = -(int) (TEXTURE_LON_OFFSET + Math.toDegrees(Math.atan2(position.getX(), position.getZ())));//Math.toDegrees(Math.atan(position.getX() / position.getZ()));
+        int lon = -(int) (TEXTURE_LON_OFFSET + Math.toDegrees(Math.atan2(position.getX(), position.getZ())));
+
+        //Arrondir lat et lon pour obtenir une coordonnée présente dans le fichier CSV
+        if (lat % 4 != 0) {
+            if ((lat + 1) % 4 == 0)      lat = lat + 1;
+            else if ((lat - 1) % 4 == 0) lat = lat - 1;
+            else                         lat = lat + 2;
+        }
+        if (lat < -88) lat = -88;
+        if (lat > 88)  lat = 88;
+        if ((lon + 2) % 4 != 0) {
+            if ((lon + 3) % 4 == 0)      lon = lon + 1;
+            else if ((lon + 1) % 4 == 0) lon = lon - 1;
+            else                         lon = lon + 2;
+        }
+        if (lon < -178) lon = -178;
+        if (lon > 178)  lon = 178;
+
         return new Coordinates(lat, lon);
     }
 

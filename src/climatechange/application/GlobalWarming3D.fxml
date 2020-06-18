@@ -17,7 +17,7 @@
             <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                <children>
                   <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" text="Show temperatures" />
-                  <VBox fx:id="controlsVBox" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="controlsVBox" disable="true" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="10.0">
                            <children>
@@ -53,12 +53,12 @@
                               <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
                            </children>
                         </HBox>
-                        <LineChart fx:id="lineChart" legendVisible="false" prefHeight="233.0" prefWidth="295.0" title="Temperature evolution" titleSide="BOTTOM">
+                        <LineChart fx:id="lineChart" legendVisible="false" prefHeight="233.0" prefWidth="295.0" style="-fx-font-size: 10px;" title="Temperature evolution" titleSide="BOTTOM">
                           <xAxis>
-                            <NumberAxis side="BOTTOM" />
+                            <NumberAxis side="BOTTOM" fx:id="xAxis" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" />
+                            <NumberAxis fx:id="yAxis" side="LEFT" />
                           </yAxis>
                         </LineChart>
                      </children>

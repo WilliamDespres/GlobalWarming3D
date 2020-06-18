@@ -9,21 +9,16 @@ import climatechange.data.TemperatureMap;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.PickResult;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,7 +27,6 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -51,11 +45,14 @@ public class GlobalWarming3D implements Initializable {
     @FXML private Button stopButton;
     @FXML private ImageView playPauseImageView;
     @FXML private LineChart<Number, Number> lineChart;
-    Label coordinates = new Label();
+    @FXML private NumberAxis xAxis;
+    @FXML private NumberAxis yAxis;
+    Label coordinatesLabel = new Label();
 
     // Gestion des ressources
     public ResourceManager resourceManager = new ResourceManager();
     private float minTemp, maxTemp;
+    XYChart.Series<Number, Number> series;
 
     // Composants 3D
     Group earth;
@@ -93,8 +90,17 @@ public class GlobalWarming3D implements Initializable {
         initEarthCanvas();
         initListeners();
         initTemperatures();
-        updateChart(new Coordinates(-88,-178));
+        initChart();
+        updateChart(null);
+        coordinatesLabel.getTransforms().add(new Translate(10,10));
         yearTextField.setText("2020");
+
+        // Ajouter infobulles
+        showTempCheckBox.setTooltip(new Tooltip("Display the temperature anomalies on the globe."));
+        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nPress ALT to reset"));
+        Tooltip.install(lineChart, new Tooltip("Click on an area on the Earth to show the evolution of its temperatures. \nClick on the background to show the average evolution."));
+        colorsRadioButton.setTooltip(new Tooltip("Show temperatures with colored quadrilaterals on the surface of the Earth."));
+        histogramsRadioButton.setTooltip(new Tooltip("Show temperatures with colored histograms on the surface of the Earth."));
     }
 
     /**
@@ -122,7 +128,7 @@ public class GlobalWarming3D implements Initializable {
         subScene.setFill(Color.DARKGRAY);
 
         // Add subscene to canvas
-        earthCanvas.getChildren().addAll(subScene, coordinates);
+        earthCanvas.getChildren().addAll(subScene, coordinatesLabel);
     }
 
     /**
@@ -141,7 +147,7 @@ public class GlobalWarming3D implements Initializable {
     }
 
     /**
-     * Initialise tous les listeners des composants JavaFX de l'interface 2D.
+     * Initialise tous les listeners des composants JavaFX de l'interface 2D et 3D.
      */
     public void initListeners() {
         // Listener pour le textField
@@ -193,10 +199,28 @@ public class GlobalWarming3D implements Initializable {
             }
         }));
 
-        // Listener pour les clics sur la terre
+        // Listeners pour la souris sur la Terre
+        // Affichage des coordonnées
         earth.setOnMouseMoved(mouseEvent -> {
             Point3D click = mouseEvent.getPickResult().getIntersectedPoint();
-            coordinates.setText(Conversions.coord3dTogeoCoord(click).toString());
+            coordinatesLabel.setText(Conversions.coord3dTogeoCoord(click).toString());
+            mouseEvent.consume();
+        });
+        // Création du graphique
+        earth.setOnMouseClicked(mouseEvent -> {
+            Point3D click = mouseEvent.getPickResult().getIntersectedPoint();
+            Coordinates coordinates = Conversions.coord3dTogeoCoord(click);
+
+            updateChart(coordinates);
+            mouseEvent.consume();
+        });
+
+        // Listeners pour la souris hors de la Terre
+        earthCanvas.setOnMouseMoved(mouseEvent -> {
+            coordinatesLabel.setText("");
+        });
+        earthCanvas.setOnMouseClicked(mouseEvent -> {
+            updateChart(null);
         });
     }
 
@@ -278,7 +302,7 @@ public class GlobalWarming3D implements Initializable {
             float temperature = temperatures[i];
 
             histogram.setMaterial(new PhongMaterial(Conversions.temperatureToColor(temperature, minTemp, maxTemp)));
-            histogram.setHeight(temperature > 0 ? 0.6 * temperature/maxTemp : 0.01); //TODO essayer translate
+            histogram.setHeight(temperature > 0 ? (float)Math.round(60 * temperature/maxTemp) / 100 : 0.01);
         }
     }
 
@@ -325,23 +349,54 @@ public class GlobalWarming3D implements Initializable {
     }
 
     /**
+     * Initialise le graphe 2D de l'évolution des températures.
+     */
+    public void initChart() {
+        lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
+
+        //xAxis.setAnimated(false);
+        //yAxis.setAnimated(false);
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(1880);
+        xAxis.setUpperBound(2020);
+        series = new XYChart.Series<>();
+        lineChart.getData().add(series);
+    }
+
+    /**
      * Affiche le graphe 2D de l'évolution des températures pour une zone donnée, ou pour l'ensemble du globe.
      * @param coordinates Coordonnées de la zone pour lesquelles les températures sont à afficher,
      *                    ou null pour afficher l'évolution de la moyenne mondiale.
      */
     public void updateChart(Coordinates coordinates) {
-        lineChart.getData().clear();
-        lineChart.getXAxis().setAutoRanging(true);
-        lineChart.getYAxis().setAutoRanging(true);
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.getData().clear();
+        // Afficher pour une année
         if (coordinates != null && resourceManager.getAreas().contains(coordinates)) {
+            lineChart.setTitle(coordinates + " temperature evolution");
             for (Integer year : resourceManager.getYears()) {
                 if (!Float.isNaN(resourceManager.getMap(year).get(coordinates)))
                     series.getData().add(new XYChart.Data<>(year, resourceManager.getMap(year).get(coordinates)));
             }
         }
-        lineChart.getData().add(series);
+        // Afficher la moyenne mondiale
+        else {
+            lineChart.setTitle("World temperature evolution");
+            for (Integer year : resourceManager.getYears()) {
+                TemperatureMap temperatureMap = resourceManager.getMap(year);
+                float average = 0;
+                int sampleSize = 0;
+                for (Coordinates coord : resourceManager.getAreas()) {
+                    if (!Float.isNaN(temperatureMap.get(coord))) {
+                        average += temperatureMap.get(coord);
+                        sampleSize ++;
+                    }
+                }
+                average /= sampleSize;
 
+                series.getData().add(new XYChart.Data<>(year, average));
+            }
+        }
     }
 
     /**

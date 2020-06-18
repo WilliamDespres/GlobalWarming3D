@@ -9,7 +9,7 @@ import javafx.scene.transform.Rotate;
 
 public class CameraManager {
 
-    private static final double CAMERA_MIN_DISTANCE = 0;//-1.5;
+    private static final double CAMERA_MIN_DISTANCE = -1.5;
     private static final double CAMERA_INITIAL_DISTANCE = -5;
     private static final double CAMERA_INITIAL_X_OFFSET = 0.0;
     private static final double CAMERA_INITIAL_Y_OFFSET = 0.0;
