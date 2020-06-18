@@ -96,6 +96,10 @@ public class ResourceManager {
         return allMaps.getOrDefault(year, null);
     }
 
+    /**
+     * Renvoie la taille de l'échantillon, i.e le nombre d'années documentées.
+     * @return La taille de l'échantillon.
+     */
     public int getSampleNumber() {
         return allMaps.keySet().size();
     }
