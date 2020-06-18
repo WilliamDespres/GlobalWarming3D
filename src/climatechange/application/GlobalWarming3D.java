@@ -9,6 +9,8 @@ import climatechange.data.TemperatureMap;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
@@ -41,7 +43,8 @@ public class GlobalWarming3D implements Initializable {
     @FXML private Slider yearSlider;
     @FXML private RadioButton colorsRadioButton;
     @FXML private RadioButton histogramsRadioButton;
-    @FXML private ChoiceBox<Integer> speedChoiceBox;
+    @FXML private Spinner<Integer> speedSpinner;
+    @FXML private Button playPauseButton;
     @FXML private Button stopButton;
     @FXML private ImageView playPauseImageView;
     @FXML private LineChart<Number, Number> lineChart;
@@ -83,8 +86,10 @@ public class GlobalWarming3D implements Initializable {
         histogramsRadioButton.setToggleGroup(radioButtonsGroup);
 
         // Ajouter les vitesses possibles
-        speedChoiceBox.getItems().addAll(1, 2, 4, 8, 16, 32, 64);
-        speedChoiceBox.setValue(8);
+        ObservableList<Integer> speeds = FXCollections.observableArrayList(1, 2, 4, 8, 16, 32, 64);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(speeds);
+        valueFactory.setValue(8);
+        speedSpinner.setValueFactory(valueFactory);
 
         // Initialiser Canvas, Listeners et Graphique
         initEarthCanvas();
@@ -97,10 +102,15 @@ public class GlobalWarming3D implements Initializable {
 
         // Ajouter infobulles
         showTempCheckBox.setTooltip(new Tooltip("Display the temperature anomalies on the globe."));
-        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nPress ALT to reset"));
-        Tooltip.install(lineChart, new Tooltip("Click on an area on the Earth to show the evolution of its temperatures. \nClick on the background to show the average evolution."));
+        yearTextField.setTooltip(new Tooltip("Set a year to show its temperature anomalies."));
+        yearSlider.setTooltip(new Tooltip("Set a year to show its temperature anomalies."));
+        playPauseButton.setTooltip(new Tooltip("Animate the temperature evolution."));
+        stopButton.setTooltip(new Tooltip("Stop the animation."));
+        speedSpinner.setTooltip(new Tooltip("Set the animation speed."));
         colorsRadioButton.setTooltip(new Tooltip("Show temperatures with colored quadrilaterals on the surface of the Earth."));
         histogramsRadioButton.setTooltip(new Tooltip("Show temperatures with colored histograms on the surface of the Earth."));
+        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nPress CTRL for precision \nPress ALT to reset"));
+        Tooltip.install(lineChart, new Tooltip("Click on an area on Earth to show its temperature evolution. \nClick on the background to show the average evolution."));
     }
 
     /**
@@ -179,14 +189,16 @@ public class GlobalWarming3D implements Initializable {
             else yearTextField.setText(newValue.replaceAll("[^\\d]", ""));
         });
 
+
         // Listener pour le slider
         yearSlider.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
             // Mise à jour du textField
             yearTextField.setText(Long.toString(Math.round((double)newValue)));
         }));
 
+
         // Listener pour la choice box
-        speedChoiceBox.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
+        speedSpinner.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (animated) {
                 // On change la vitesse de l'animation
                 animation.stop();
@@ -198,6 +210,7 @@ public class GlobalWarming3D implements Initializable {
                 animation.play();
             }
         }));
+
 
         // Listeners pour la souris sur la Terre
         // Affichage des coordonnées
@@ -442,7 +455,7 @@ public class GlobalWarming3D implements Initializable {
     public void handlePlayPauseButtonAction() {
         if (!animated) {
             if (yearSlider.getValue() == 2020) yearSlider.setValue(1880);
-            animation = new Timeline(new KeyFrame(Duration.millis((float) 1000/speedChoiceBox.getValue()), event -> {
+            animation = new Timeline(new KeyFrame(Duration.millis((float) 1000/speedSpinner.getValue()), event -> {
                 if (yearSlider.getValue() < 2020) yearSlider.increment();
                 else stopButton.fire();
             }));

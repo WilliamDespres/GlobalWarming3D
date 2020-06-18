@@ -19,7 +19,7 @@
                   <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" text="Show temperatures" />
                   <VBox fx:id="controlsVBox" disable="true" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="10.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="8.0">
                            <children>
                               <TextField fx:id="yearTextField" prefHeight="25.0" prefWidth="50.0" />
                               <Button fx:id="playPauseButton" mnemonicParsing="false" onAction="#handlePlayPauseButtonAction">
@@ -41,7 +41,7 @@
                                  </graphic>
                               </Button>
                               <Label text="Speed:" />
-                              <ChoiceBox fx:id="speedChoiceBox" prefHeight="25.0" prefWidth="46.0" />
+                              <Spinner fx:id="speedSpinner" prefHeight="25.0" prefWidth="53.0" />
                               <Label text="years/sec" />
                            </children>
                         </HBox>

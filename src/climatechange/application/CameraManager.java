@@ -18,7 +18,7 @@ public class CameraManager {
     private static final double CAMERA_NEAR_CLIP = 0.1;
     private static final double CAMERA_FAR_CLIP = 10000.0;
     private static final double CONTROL_MULTIPLIER = 0.1;
-    private static final double SHIFT_MULTIPLIER = 10.0;
+    private static final double SHIFT_MULTIPLIER = 1.0;
     private static final double MOUSE_SPEED = 0.01;
     private static final double ROTATION_SPEED = 0.5;
     private static final double TRACK_SPEED = 0.6;
