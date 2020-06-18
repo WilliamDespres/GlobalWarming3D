@@ -40,16 +40,15 @@ public class GlobalWarming3D implements Initializable {
     @FXML private VBox controlsVBox;
     @FXML private CheckBox showTempCheckBox;
     @FXML private TextField yearTextField;
+    @FXML private Button playPauseButton;
+    @FXML private ImageView playPauseImageView;
+    @FXML private Button stopButton;
+    @FXML private Spinner<Integer> speedSpinner;
     @FXML private Slider yearSlider;
     @FXML private RadioButton colorsRadioButton;
     @FXML private RadioButton histogramsRadioButton;
-    @FXML private Spinner<Integer> speedSpinner;
-    @FXML private Button playPauseButton;
-    @FXML private Button stopButton;
-    @FXML private ImageView playPauseImageView;
     @FXML private LineChart<Number, Number> lineChart;
     @FXML private NumberAxis xAxis;
-    @FXML private NumberAxis yAxis;
     Label coordinatesLabel = new Label();
 
     // Gestion des ressources
@@ -67,6 +66,9 @@ public class GlobalWarming3D implements Initializable {
     boolean animated = false;
     Timeline animation;
 
+    /**
+     * Méthode d'initialisation de l'application.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Charger les données

@@ -15,7 +15,7 @@ public abstract class Histograms {
      * @param temperature La température de la position géographique.
      * @param maxTemp L'anomalie de température la plus haute.
      * @param minTemp L'anomalie de température la plus basse.
-     * @return L'histogramme sous forme de cylindre.
+     * @return L'histogramme sous forme de Box.
      */
     public static Box makeHistogram(int latitude, int longitude, float temperature, float maxTemp, float minTemp) {
         Box box = new Box(0.01, 0.6, 0.01);//temperature > 0 ? 0.6 * temperature/maxTemp : 0.01, 0.01);
