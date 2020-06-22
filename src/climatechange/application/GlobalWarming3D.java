@@ -49,6 +49,7 @@ public class GlobalWarming3D implements Initializable {
     @FXML private RadioButton histogramsRadioButton;
     @FXML private LineChart<Number, Number> lineChart;
     @FXML private NumberAxis xAxis;
+    @FXML private NumberAxis yAxis;
     Label coordinatesLabel = new Label();
 
     // Gestion des ressources
@@ -367,14 +368,20 @@ public class GlobalWarming3D implements Initializable {
      * Initialise le graphe 2D de l'évolution des températures.
      */
     public void initChart() {
+        // Style du graphique
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
 
-        //xAxis.setAnimated(false);
-        //yAxis.setAnimated(false);
+        // Bornes des axes
         xAxis.setAutoRanging(false);
         xAxis.setLowerBound(1880);
         xAxis.setUpperBound(2020);
+
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(minTemp);
+        yAxis.setUpperBound(maxTemp);
+
+        // Série de données
         series = new XYChart.Series<>();
         lineChart.getData().add(series);
     }
