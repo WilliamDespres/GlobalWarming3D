@@ -6,15 +6,15 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="climatechange.gui.GlobalWarming3D">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="climatechange.gui.GlobalWarming3D">
    <children>
-      <HBox alignment="CENTER" prefHeight="400.0" prefWidth="700.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER" prefHeight="430.0" prefWidth="700.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <Pane fx:id="earthCanvas" prefHeight="380.0" prefWidth="380.0" />
-            <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
+            <Pane fx:id="earthCanvas" prefHeight="410.0" prefWidth="380.0" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                <children>
                   <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" text="Show temperatures" />
                   <VBox fx:id="controlsVBox" disable="true" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
@@ -26,9 +26,17 @@
                               <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
                            </children>
                         </HBox>
+                        <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="8.0">
                            <children>
                               <TextField fx:id="yearTextField" prefHeight="25.0" prefWidth="50.0" />
+                              <Slider fx:id="yearSlider" blockIncrement="1.0" max="2020.0" min="1880.0" prefHeight="38.0" prefWidth="237.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" />
+                        <HBox alignment="CENTER" prefHeight="33.0" prefWidth="295.0" spacing="5.0">
+                           <children>
+                              <Label text="Animation:" />
                               <Button fx:id="playPauseButton" mnemonicParsing="false" onAction="#handlePlayPauseButtonAction">
                                  <graphic>
                                     <ImageView fx:id="playPauseImageView" fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
@@ -38,7 +46,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button fx:id="stopButton" layoutX="60.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleStopButtonAction">
+                              <Button fx:id="stopButton" mnemonicParsing="false" onAction="#handleStopButtonAction">
                                  <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -50,9 +58,8 @@
                               <Label text="Speed:" />
                               <Spinner fx:id="speedSpinner" prefHeight="25.0" prefWidth="53.0" />
                               <Label text="years/sec" />
-                           </children>
-                        </HBox>
-                        <Slider fx:id="yearSlider" blockIncrement="1.0" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
+                           </children></HBox>
+                        <Separator prefWidth="200.0" />
                         <LineChart fx:id="lineChart" legendVisible="false" prefHeight="233.0" prefWidth="295.0" style="-fx-font-size: 10px;" title="Temperature evolution" titleSide="BOTTOM">
                           <xAxis>
                             <NumberAxis side="BOTTOM" fx:id="xAxis" />

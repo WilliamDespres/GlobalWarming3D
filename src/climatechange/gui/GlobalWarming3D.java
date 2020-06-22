@@ -136,7 +136,7 @@ public class GlobalWarming3D implements Initializable {
         new CameraManager(camera, earthCanvas, earth);
 
         //Create subscene
-        SubScene subScene = new SubScene(earth, 380, 380, true, SceneAntialiasing.BALANCED);
+        SubScene subScene = new SubScene(earth, 380, 410, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
         subScene.setFill(Color.DARKGRAY);
 
