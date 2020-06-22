@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="climatechange.application.GlobalWarming3D">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="climatechange.gui.GlobalWarming3D">
    <children>
       <HBox alignment="CENTER" prefHeight="400.0" prefWidth="700.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -19,6 +19,13 @@
                   <CheckBox fx:id="showTempCheckBox" mnemonicParsing="false" onAction="#handleShowTempCheckBoxAction" text="Show temperatures" />
                   <VBox fx:id="controlsVBox" disable="true" prefHeight="347.0" prefWidth="295.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
+                        <HBox alignment="CENTER" prefHeight="24.0" prefWidth="295.0" spacing="10.0">
+                           <children>
+                              <Label text="Display mode:" />
+                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" onAction="#handleColorsRadioButtonAction" selected="true" text="Colors" />
+                              <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="295.0" spacing="8.0">
                            <children>
                               <TextField fx:id="yearTextField" prefHeight="25.0" prefWidth="50.0" />
@@ -46,13 +53,6 @@
                            </children>
                         </HBox>
                         <Slider fx:id="yearSlider" blockIncrement="1.0" max="2020.0" min="1880.0" showTickLabels="true" showTickMarks="true" value="2020.0" />
-                        <HBox prefHeight="24.0" prefWidth="295.0" spacing="10.0">
-                           <children>
-                              <Label text="Display:" />
-                              <RadioButton fx:id="colorsRadioButton" mnemonicParsing="false" onAction="#handleColorsRadioButtonAction" selected="true" text="Colors" />
-                              <RadioButton fx:id="histogramsRadioButton" mnemonicParsing="false" onAction="#handleHistogramsRadioButtonAction" text="Histograms" />
-                           </children>
-                        </HBox>
                         <LineChart fx:id="lineChart" legendVisible="false" prefHeight="233.0" prefWidth="295.0" style="-fx-font-size: 10px;" title="Temperature evolution" titleSide="BOTTOM">
                           <xAxis>
                             <NumberAxis side="BOTTOM" fx:id="xAxis" />

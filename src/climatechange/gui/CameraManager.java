@@ -1,4 +1,4 @@
-package climatechange.application;
+package climatechange.gui;
 
 import javafx.event.EventHandler;
 import javafx.scene.*;

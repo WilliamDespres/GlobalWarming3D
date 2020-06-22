@@ -1,4 +1,4 @@
-package climatechange.application.rendering;
+package climatechange.gui.rendering;
 
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;

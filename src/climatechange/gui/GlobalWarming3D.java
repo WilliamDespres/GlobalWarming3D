@@ -1,8 +1,8 @@
-package climatechange.application;
+package climatechange.gui;
 
-import climatechange.application.rendering.Conversions;
-import climatechange.application.rendering.Histograms;
-import climatechange.application.rendering.Quadrilaterals;
+import climatechange.gui.rendering.Conversions;
+import climatechange.gui.rendering.Histograms;
+import climatechange.gui.rendering.Quadrilaterals;
 import climatechange.data.Coordinates;
 import climatechange.data.ResourceManager;
 import climatechange.data.TemperatureMap;
@@ -112,7 +112,7 @@ public class GlobalWarming3D implements Initializable {
         speedSpinner.setTooltip(new Tooltip("Set the animation speed."));
         colorsRadioButton.setTooltip(new Tooltip("Show temperatures with colored quadrilaterals on the surface of the Earth."));
         histogramsRadioButton.setTooltip(new Tooltip("Show temperatures with colored histograms on the surface of the Earth."));
-        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nRight click + drag to translate \nPress CTRL for precision \nPress ALT to reset"));
+        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nRight click + drag to translate \nPress CTRL for precision \nPress ALT to reset \nClick to show line chart"));
         Tooltip.install(lineChart, new Tooltip("Click on an area on Earth to show its temperature evolution. \nClick on the background to show the average evolution."));
     }
 
@@ -423,7 +423,7 @@ public class GlobalWarming3D implements Initializable {
 
     /**
      * Active ou désactive l'affichage des températures.
-     * Méthode appelée quand l'utilisateur clique sur la checkBox "Show temperatures".
+     * Méthode appelée lorsque l'utilisateur clique sur la checkBox "Show temperatures".
      */
     public void handleShowTempCheckBoxAction() {
         //Activation
@@ -444,6 +444,7 @@ public class GlobalWarming3D implements Initializable {
 
     /**
      * Passe l'affichage en mode quadrilatères.
+     * Méthode appelée lorsque l'utilisateur clique sur le radioButton "Colors".
      */
     public void handleColorsRadioButtonAction() {
         disableHistograms();
@@ -452,6 +453,7 @@ public class GlobalWarming3D implements Initializable {
 
     /**
      * Passe l'affichage en mode histogrammes.
+     * Méthode appelée lorsque l'utilisateur clique sur le radioButton "Histograms".
      */
     public void handleHistogramsRadioButtonAction() {
         disableQuadrilaterals();
@@ -460,6 +462,7 @@ public class GlobalWarming3D implements Initializable {
 
     /**
      * Lance ou met en pause l'animation.
+     * Méthode appelée lorsque l'utilisateur clique sur le bouton "Play/Pause".
      */
     public void handlePlayPauseButtonAction() {
         if (!animated) {
@@ -470,22 +473,23 @@ public class GlobalWarming3D implements Initializable {
             }));
             animation.setCycleCount(Timeline.INDEFINITE);
             animation.play();
-            playPauseImageView.setImage(new Image("climatechange/application/icons/pause.png"));
+            playPauseImageView.setImage(new Image("climatechange/gui/icons/pause.png"));
             animated = true;
         }
         else {
             animation.stop();
-            playPauseImageView.setImage(new Image("climatechange/application/icons/play.png"));
+            playPauseImageView.setImage(new Image("climatechange/gui/icons/play.png"));
             animated = false;
         }
     }
 
     /**
      * Arrête l'animation.
+     * Méthode appelée lorsque l'utilisateur clique sur le bouton "Stop".
      */
     public void handleStopButtonAction() {
         if (animated) {
-            playPauseImageView.setImage(new Image("climatechange/application/icons/play.png"));
+            playPauseImageView.setImage(new Image("climatechange/gui/icons/play.png"));
             animation.stop();
             animated = false;
         }
