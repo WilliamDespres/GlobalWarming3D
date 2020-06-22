@@ -112,7 +112,7 @@ public class GlobalWarming3D implements Initializable {
         speedSpinner.setTooltip(new Tooltip("Set the animation speed."));
         colorsRadioButton.setTooltip(new Tooltip("Show temperatures with colored quadrilaterals on the surface of the Earth."));
         histogramsRadioButton.setTooltip(new Tooltip("Show temperatures with colored histograms on the surface of the Earth."));
-        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nPress CTRL for precision \nPress ALT to reset"));
+        Tooltip.install(earthCanvas, new Tooltip("Drag and drop to rotate \nScroll to zoom \nRight click + drag to translate \nPress CTRL for precision \nPress ALT to reset"));
         Tooltip.install(lineChart, new Tooltip("Click on an area on Earth to show its temperature evolution. \nClick on the background to show the average evolution."));
     }
 
